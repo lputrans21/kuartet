@@ -1,0 +1,286 @@
+:root {
+    --primary-color: #4a154b;
+    --secondary-color: #6b275a;
+    --accent-color: #ffb703;
+    --success-color: #2a9d8f;
+    --danger-color: #e76f51;
+    --bg-color: #f4f1de;
+    --card-bg: #ffffff;
+    --text-color: #2b2d42;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-header h1 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.hud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+.card-box {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 500px;
+    margin: 40px auto;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    width: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary { background: var(--accent-color); color: var(--primary-color); }
+.btn-secondary { background: var(--secondary-color); color: white; }
+
+/* Layout Permainan */
+.game-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 850px) {
+    .game-layout { grid-template-columns: 1fr; }
+}
+
+.category-selector {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.category-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.cat-btn {
+    padding: 10px 14px;
+    border: 2px solid #eee;
+    background: #fafafa;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cat-btn.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+}
+
+.cat-btn.completed {
+    background: #d4edda;
+    border-color: var(--success-color);
+    color: #155724;
+}
+
+.board-container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Kartu Kuartet */
+.kuartet-card {
+    border: 3px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 250px;
+    position: relative;
+}
+
+.kuartet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-code {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin: 5px 0;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.card-materi {
+    font-size: 0.75rem;
+    color: #555;
+    background: #f8f9fa;
+    padding: 6px;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+.card-status {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.2rem;
+}
+
+/* Modal Kuis */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.opt-btn {
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+    cursor: pointer;
+    text-align: left;
+    font-weight: 600;
+}
+
+.opt-btn:hover { background: #e9ecef; }
+
+.highlight { color: var(--success-color); font-size: 1.5rem; }
+.status-msg { margin-top: 15px; font-size: 0.9rem; color: #666; }
