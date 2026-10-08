@@ -1,5 +1,5 @@
 // CONFIG: Ganti URL di bawah ini dengan URL Web App dari Google Apps Script Anda
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYOUR_SCRIPT_ID_HERE/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyenEblBfTxHv_8q3SuT7LqX6P8FBH_UeYECjox_7RNFcaVtpLLPSmOEjLfBdO19jU/exec";
 
 // -------------------------------------------------------------
 // 2. DATA KARTU KUARTET (Lengkap 48 Kartu A1 - L4 dari Gambar)
