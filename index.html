@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Kartu Kuartet Edukasi Drama</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header & HUD -->
+        <header class="game-header">
+            <h1>🎭 Kuartet Drama Edukasi</h1>
+            <div class="hud" id="hud" style="display: none;">
+                <div class="hud-item">👤 <span id="player-display">Pemain</span></div>
+                <div class="hud-item">⏱️ <span id="timer-display">05:00</span></div>
+                <div class="hud-item">🏆 Skor: <span id="score-display">0</span></div>
+                <div class="hud-item">🔥 Combo: x<span id="combo-display">1</span></div>
+                <div class="hud-item">❤️ Nyawa: <span id="lives-display">❤️❤️❤️</span></div>
+                <div class="hud-item">📦 Set: <span id="sets-display">0</span>/12</div>
+            </div>
+        </header>
+
+        <!-- Layar Registrasi / Start -->
+        <section id="start-screen" class="screen active">
+            <div class="card-box">
+                <h2>Selamat Datang di Game Kuartet Drama!</h2>
+                <p>Uji pengetahuanmu tentang dunia pementasan drama, struktur naskah, hingga teknik akting!</p>
+                
+                <form id="player-form">
+                    <div class="form-group">
+                        <label for="player-name">Nama Lengkap:</label>
+                        <input type="text" id="player-name" placeholder="Masukkan nama Anda..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="player-class">Kelas / Sekolah:</label>
+                        <input type="text" id="player-class" placeholder="Contoh: XI IPA 1 / SMAN 1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🚀 Mulai Permainan</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Layar Utama Permainan -->
+        <section id="game-screen" class="screen">
+            <div class="game-layout">
+                <!-- Area Kategori Kuartet -->
+                <div class="category-selector">
+                    <h3>Pilih Tema Kuartet</h3>
+                    <div id="category-list" class="category-grid"></div>
+                </div>
+
+                <!-- Area Papan Kartu Terbuka -->
+                <div class="board-container">
+                    <div class="board-header">
+                        <h3 id="current-theme-title">Silakan Pilih Tema Kartu</h3>
+                        <p id="current-theme-desc">Cocokkan 4 kartu dalam 1 kelompok tema untuk membentuk Set Kuartet lengkap!</p>
+                    </div>
+                    
+                    <div id="card-board" class="card-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Pertanyaan Kuis / Konfirmasi -->
+        <div id="quiz-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3 id="quiz-title">Pertanyaan Kuis Drama</h3>
+                <p id="quiz-question" class="quiz-text"></p>
+                <div id="quiz-options" class="options-grid"></div>
+            </div>
+        </div>
+
+        <!-- Layar Hasil Akhir / Modal Game Over -->
+        <section id="result-screen" class="screen">
+            <div class="card-box result-box">
+                <h2 id="result-title">🎉 Permainan Selesai!</h2>
+                <div class="score-summary">
+                    <p>Nama: <strong id="res-name">-</strong></p>
+                    <p>Kelas: <strong id="res-class">-</strong></p>
+                    <p>Skor Akhir: <strong id="res-score" class="highlight">0</strong></p>
+                    <p>Waktu Sisa: <strong id="res-time">00:00</strong></p>
+                    <p>Set Kuartet Terkumpul: <strong id="res-sets">0 / 12</strong></p>
+                </div>
+                <div class="status-msg" id="upload-status">Sedang mengunggah skor ke Google Sheets...</div>
+                <button id="btn-restart" class="btn btn-secondary">🔄 Main Lagi</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
