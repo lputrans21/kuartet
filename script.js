@@ -82,7 +82,7 @@ const kuartetData = [
 // STATE APLIKASI
 // -------------------------------------------------------------
 let player = { name: "", class: "" };
-let score = 0;
+let score = 0; // Skor Mentah (Skala 0 - 9999)
 let combo = 1;
 let lives = 3;
 let timerSeconds = 300; // 5 Menit
@@ -90,6 +90,13 @@ let timerInterval = null;
 let selectedTheme = "";
 let unlockedCards = []; // List ID kartu yang telah dicocokkan
 let completedThemes = [];
+
+// Skor Maksimum Mentah Teoretis yang bisa dicapai:
+// - 48 Kartu x 100 Base Poin = 4,800
+// - Bonus Set Kuartet (12 set x 300) = 3,600
+// - Bonus Sisa Waktu = Max 600
+// - Combo Bonus = Max ~999
+const MAX_POSSIBLE_SCORE = 9999;
 
 // -------------------------------------------------------------
 // INITIALIZATION
@@ -222,15 +229,15 @@ function checkAnswer(isCorrect, card) {
     closeModal();
 
     if (isCorrect) {
-        // Tambah Poin & Combo
-        score += 20 * combo;
+        // Tambah Skor Mentah Skala Ribuan (Base 100 Poin x Combo multiplier)
+        score += Math.min(9999, 100 * combo);
         combo++;
         unlockedCards.push(card.id);
         
         checkSetCompletion(card.tema);
     } else {
-        // Penalti Salah
-        score = Math.max(0, score - 10);
+        // Penalti Salah (-150 Skor Mentah)
+        score = Math.max(0, score - 150);
         combo = 1;
         lives--;
         
@@ -242,6 +249,9 @@ function checkAnswer(isCorrect, card) {
         }
     }
 
+    // Batasi skor mentah agar maksimal 9999
+    score = Math.min(9999, Math.max(0, score));
+
     updateHUD();
     renderBoard();
 }
@@ -252,8 +262,10 @@ function checkSetCompletion(tema) {
 
     if (allUnlocked && !completedThemes.includes(tema)) {
         completedThemes.push(tema);
-        score += 100; // Bonus Set Kuartet
-        alert(`🎉 Selamat! Anda berhasil melengkapi 1 Set Kuartet Tema: "${tema}" (+100 Poin)`);
+        score += 300; // Bonus Set Kuartet (+300 Skor Mentah)
+        score = Math.min(9999, score);
+        
+        alert(`🎉 Selamat! Anda berhasil melengkapi 1 Set Kuartet Tema: "${tema}" (+300 Poin)`);
         
         updateCategoryBadges();
         
@@ -268,7 +280,6 @@ function updateCategoryBadges() {
     buttons.forEach(btn => {
         const text = btn.innerText;
         const theme = text.substring(text.indexOf(". ") + 2, text.lastIndexOf(" 0/4")).trim();
-        const count = kuartetData.filter(c => c.tema === selectedTheme && unlockedCards.includes(c.id)).length;
         
         if (completedThemes.includes(theme)) {
             btn.classList.add("completed");
@@ -277,7 +288,7 @@ function updateCategoryBadges() {
 }
 
 function updateHUD() {
-    document.getElementById("score-display").innerText = score;
+    document.getElementById("score-display").innerText = score; // Menampilkan skor ribuan (0 - 9999)
     document.getElementById("combo-display").innerText = combo;
     document.getElementById("sets-display").innerText = completedThemes.length;
 }
@@ -298,10 +309,17 @@ function closeModal() {
 function endGame(isWin, reason) {
     clearInterval(timerInterval);
 
-    // Speed Bonus
+    // Speed Bonus (Tambahan skor mentah jika menang)
     if (isWin) {
         score += Math.floor(timerSeconds * 2);
     }
+    
+    // Pastikan skor mentah tetap berada di rentang 0 - 9999
+    score = Math.min(9999, Math.max(0, score));
+
+    // Konversi Skor Mentah (0 - 9999) menjadi Nilai Akhir Skala (0 - 100)
+    let finalNormalizedScore = Math.round((score / MAX_POSSIBLE_SCORE) * 100);
+    finalNormalizedScore = Math.min(100, Math.max(0, finalNormalizedScore));
 
     document.getElementById("game-screen").classList.remove("active");
     document.getElementById("result-screen").classList.add("active");
@@ -309,18 +327,21 @@ function endGame(isWin, reason) {
     document.getElementById("result-title").innerText = isWin ? "🏆 Kemenangan Luar Biasa!" : `💥 Game Over: ${reason}`;
     document.getElementById("res-name").innerText = player.name;
     document.getElementById("res-class").innerText = player.class;
-    document.getElementById("res-score").innerText = score;
+    
+    // Tampilkan Nilai Akhir Skala 0 - 100 beserta Detail Skor Mentah Ribuannya
+    document.getElementById("res-score").innerHTML = `${finalNormalizedScore} <span style="font-size:0.8rem; color:#666;">(Skor Mentah: ${score})</span>`;
     
     let mins = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
     let secs = (timerSeconds % 60).toString().padStart(2, '0');
     document.getElementById("res-time").innerText = `${mins}:${secs}`;
     document.getElementById("res-sets").innerText = `${completedThemes.length} / 12`;
 
-    // Kirim Data ke Spreadsheet
+    // Kirim Data ke Spreadsheet (mengirim Nilai Akhir 0-100 dan Skor Mentah)
     saveScoreToGoogleSheet({
         nama: player.name,
         kelas: player.class,
-        skor: score,
+        skor: finalNormalizedScore,
+        skorMentah: score,
         waktu: `${mins}:${secs}`,
         setTerkumpul: completedThemes.length
     });
